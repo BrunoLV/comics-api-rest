@@ -23,57 +23,38 @@ import java.util.Properties;
 @EnableTransactionManagement
 public class ComicsPersistenceConfiguration {
 
-    /**
-     * Datasource que proverá as conexões com o banco de dados.
-     *
-     * @param env
-     * @return
-     */
-    @Bean(destroyMethod = "close")
-    public DataSource dataSource(Environment env) {
-        HikariConfig dataSourceConfig = new HikariConfig();
-        dataSourceConfig.setDriverClassName(env.getRequiredProperty("db.driver"));
-        dataSourceConfig.setJdbcUrl(env.getRequiredProperty("db.url"));
-        dataSourceConfig.setUsername(env.getRequiredProperty("db.username"));
-        dataSourceConfig.setPassword(env.getRequiredProperty("db.password"));
-        return new HikariDataSource(dataSourceConfig);
-    }
+	@Bean(destroyMethod = "close")
+	public DataSource dataSource(Environment env) {
+		HikariConfig dataSourceConfig = new HikariConfig();
+		dataSourceConfig.setDriverClassName(env.getRequiredProperty("db.driver"));
+		dataSourceConfig.setJdbcUrl(env.getRequiredProperty("db.url"));
+		dataSourceConfig.setUsername(env.getRequiredProperty("db.username"));
+		dataSourceConfig.setPassword(env.getRequiredProperty("db.password"));
+		return new HikariDataSource(dataSourceConfig);
+	}
 
-    /**
-     * Fabrica de entity managers.
-     *
-     * @param dataSource
-     * @param env
-     * @return
-     */
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, Environment env) {
-        LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
-        entityManagerFactoryBean.setDataSource(dataSource);
-        entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        entityManagerFactoryBean.setPackagesToScan("com.valhala.comics.api.models");
+	@Bean
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, Environment env) {
+		LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
+		entityManagerFactoryBean.setDataSource(dataSource);
+		entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+		entityManagerFactoryBean.setPackagesToScan("com.valhala.comics.api.models");
 
-        Properties jpaProperties = new Properties();
-        jpaProperties.put("hibernate.dialect", env.getRequiredProperty("hibernate.dialect"));
-        jpaProperties.put("hibernate.hbm2ddl.auto", env.getRequiredProperty("hibernate.hbm2ddl.auto"));
-        jpaProperties.put("hibernate.show_sql", env.getRequiredProperty("hibernate.show_sql"));
-        jpaProperties.put("hibernate.format_sql", env.getRequiredProperty("hibernate.format_sql"));
+		Properties jpaProperties = new Properties();
+		jpaProperties.put("hibernate.dialect", env.getRequiredProperty("hibernate.dialect"));
+		jpaProperties.put("hibernate.hbm2ddl.auto", env.getRequiredProperty("hibernate.hbm2ddl.auto"));
+		jpaProperties.put("hibernate.show_sql", env.getRequiredProperty("hibernate.show_sql"));
+		jpaProperties.put("hibernate.format_sql", env.getRequiredProperty("hibernate.format_sql"));
 
-        entityManagerFactoryBean.setJpaProperties(jpaProperties);
-        return entityManagerFactoryBean;
-    }
+		entityManagerFactoryBean.setJpaProperties(jpaProperties);
+		return entityManagerFactoryBean;
+	}
 
-    /**
-     * Gerenciador de transações.
-     *
-     * @param entityManagerFactory
-     * @return
-     */
-    @Bean
-    public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
-        JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactory);
-        return transactionManager;
-    }
+	@Bean
+	public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+		JpaTransactionManager transactionManager = new JpaTransactionManager();
+		transactionManager.setEntityManagerFactory(entityManagerFactory);
+		return transactionManager;
+	}
 
 }

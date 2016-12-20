@@ -11,43 +11,45 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Created by bruno on 11/05/16.
- */
 @Service
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class ComicBookService {
 
-    @Autowired
-    private ComicBookRepository repository;
+	@Autowired
+	private ComicBookRepository repository;
 
-    @Transactional(propagation = Propagation.REQUIRED)
-    public ComicBook save(ComicBook comicBook) {
-        ComicBook comic = repository.save(comicBook);
-        return comic;
-    }
+	@Transactional(propagation = Propagation.REQUIRED)
+	public ComicBook save(ComicBook comicBook) {
+		ComicBook comic = repository.save(comicBook);
+		return comic;
+	}
 
-    @Transactional(propagation = Propagation.REQUIRED)
-    public void delete(Long id) {
-        repository.delete(id);
-    }
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void delete(Long id) {
+		repository.delete(id);
+	}
 
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public ComicBook findById(Long id) {
-        return repository.findOne(id);
-    }
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public ComicBook findById(Long id) {
+		return repository.findOne(id);
+	}
 
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<ComicBook> findAll() {
-        return repository.findAll();
-    }
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<ComicBook> findAll() {
+		return repository.findAll();
+	}
 
-    public ComicBookRepository getRepository() {
-        return repository;
-    }
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Boolean alreadyExist(Long id) {
+		return this.repository.exists(id);
+	}
 
-    public void setRepository(ComicBookRepository repository) {
-        this.repository = repository;
-    }
+	public ComicBookRepository getRepository() {
+		return repository;
+	}
+
+	public void setRepository(ComicBookRepository repository) {
+		this.repository = repository;
+	}
 
 }
